@@ -109,6 +109,21 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #d97706; 
         }
+
+        /* 3D Flip Utilities that Tailwind doesn't have by default */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .preserve-3d {
+            transform-style: preserve-3d;
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
     </style>
 </head>
 <body class="antialiased selection:bg-amber-500 selection:text-white overflow-x-hidden">
@@ -210,26 +225,40 @@
                 </div>
             </div>
 
-            <!-- Image -->
+            <!-- Image FLIP CONTAINER -->
             <div class="order-1 md:order-2 flex justify-center reveal delay-200">
-                <div class="relative group cursor-pointer perspective-1000">
-                    <!-- Animated Glow -->
+                <!-- Wrap everything in group -->
+                <div class="relative group cursor-pointer w-72 h-72 md:w-96 md:h-96 perspective-1000">
+                    
+                    <!-- Animated Glow (Outside the flip logic so it stays constant) -->
                     <div class="absolute -inset-1 bg-gradient-to-r from-amber-500 to-blue-600 rounded-2xl blur opacity-30 group-hover:opacity-60 transition duration-1000 group-hover:duration-200 animate-pulse-slow"></div>
                     
-                    <!-- Image Container -->
-                    <div class="relative w-72 h-72 md:w-96 md:h-96 rounded-2xl overflow-hidden border border-slate-700 bg-slate-800 transform transition-transform duration-500 group-hover:rotate-1 group-hover:scale-[1.02]">
-                        <!-- 
-                             REMINDER: Convert his HEIC photo to 'profile.jpg' and place in the same folder 
-                        -->
-                        <img src="profile.jpg" 
-                             onerror="this.src='https://placehold.co/600x600/1e293b/FFF?text=Ali+Mamanpoosh'"
-                             alt="Ali Mamanpoosh" 
-                             class="w-full h-full object-cover transition transform duration-700 group-hover:scale-110 filter grayscale group-hover:grayscale-0">
+                    <!-- The Flipper (Rotates 180deg on hover) -->
+                    <div class="relative w-full h-full transition-all duration-700 preserve-3d group-hover:rotate-y-180">
                         
-                        <!-- Overlay on Hover -->
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-                            <span class="text-white font-bold tracking-wide translate-y-4 group-hover:translate-y-0 transition-transform duration-300 font-mono">Ali_Mamanpoosh</span>
+                        <!-- Front Face (Default Image) -->
+                        <div class="absolute inset-0 w-full h-full rounded-2xl overflow-hidden border border-slate-700 bg-slate-800 backface-hidden">
+                            <!-- Placeholder fallback if image missing -->
+                            <img src="profile.jpg" 
+                                 onerror="this.src='https://placehold.co/600x600/1e293b/FFF?text=Ali+Mamanpoosh'"
+                                 alt="Ali Mamanpoosh" 
+                                 class="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-500">
+                            
+                            <!-- Small Overlay text on front -->
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                                <span class="text-white font-bold tracking-wide translate-y-4 group-hover:translate-y-0 transition-transform duration-300 font-mono">Ali_Mamanpoosh</span>
+                            </div>
                         </div>
+
+                        <!-- Back Face (New Image on Flip) -->
+                        <div class="absolute inset-0 w-full h-full rounded-2xl overflow-hidden border border-slate-700 bg-slate-800 rotate-y-180 backface-hidden">
+                            <!-- Make sure to name your new file profile-hover.png -->
+                            <img src="profile-hover.png" 
+                                 onerror="this.src='https://placehold.co/600x600/d97706/FFF?text=Hello!'"
+                                 alt="Ali Mamanpoosh" 
+                                 class="w-full h-full object-cover">
+                        </div>
+
                     </div>
                 </div>
             </div>
